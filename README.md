@@ -1,53 +1,96 @@
-# Next.js & HeroUI Template
+Tech Store (Next.js + HeroUI)
 
-This is a template for creating applications using Next.js 14 (app directory) and HeroUI (v2).
+A modern full-stack e-commerce application built with Next.js 15, HeroUI, and Tailwind CSS, featuring authentication, admin dashboard, product search, notifications, and cart system.
 
-[Try it on CodeSandbox](https://githubbox.com/heroui-inc/heroui/next-app-template)
+Features
+Product listing with filters & search
+Live search with suggestions
+Notifications system (Drawer UI)
+Shopping cart
+Authentication (NextAuth + JWT)
+Admin dashboard (users, products, orders)
+Dark / Light mode support
+Fully responsive (mobile-first design)
+Fast performance with Next.js App Router
+Tech Stack
+Framework: Next.js 15 (App Router)
+UI Library: HeroUI v2
+Styling: Tailwind CSS
+State Management: Zustand
+Authentication: NextAuth.js
+Database: MongoDB + Mongoose
+File Uploads: Cloudinary
+Animations: Framer Motion
+Charts: Recharts
+Notifications: Custom Drawer system
+Other Tools: Axios, bcryptjs, jsonwebtoken, nodemailer, slugify, xlsx
+Installation
 
-## Technologies Used
+Clone the repository:
 
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [HeroUI v2](https://heroui.com/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
+git clone https://github.com/your-username/tech-store.git
+cd tech-store
 
-## How to Use
+Install dependencies:
 
-### Use the template with create-next-app
-
-To create a new project based on this template using `create-next-app`, run the following command:
-
-```bash
-npx create-next-app -e https://github.com/heroui-inc/next-app-template
-```
-
-### Install dependencies
-
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
-
-```bash
 npm install
-```
-
-### Run the development server
-
-```bash
+Run the Project
+Development server:
 npm run dev
-```
 
-### Setup pnpm (optional)
+App runs on:
 
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+http://localhost:3000
+Production build:
+npm run build
+npm start
+Environment Variables
 
-```bash
-public-hoist-pattern[]=*@heroui/*
-```
+Create a .env file:
 
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
+MONGODB_URI=your_mongodb_url
+NEXTAUTH_SECRET=your_secret
+NEXTAUTH_URL=http://localhost:3000
 
-## License
+CLOUDINARY_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_key
+CLOUDINARY_API_SECRET=your_secret
 
-Licensed under the [MIT license](https://github.com/heroui-inc/next-app-template/blob/main/LICENSE).
+JWT_SECRET=your_jwt_secret
+Project Structure
+app/
+components/
+lib/
+context/
+services/
+models/
+public/
+Notifications System
+Built with HeroUI Drawer
+Real-time update support (via state/API)
+Badge counter for unread notifications
+Admin Features
+Manage products
+Manage users
+Manage orders
+Dashboard analytics
+Responsive Design
+Mobile-first UI
+Drawer navigation for mobile
+Optimized layouts for all screens
+Scripts
+npm run dev
+npm run build
+npm run start
+npm run lint
+License
+
+This project is licensed under the MIT License.
+
+Author
+
+Built by Omar Mohammed
+
+If you like this project
+
+Give it a star on GitHub and share it.
