@@ -2,7 +2,7 @@ import { connectDB } from "@/app/config/db";
 import Order from "@/app/models/order";
 import { authMiddleware } from "../../../middleware/auth.middleware";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await connectDB();
     const authcheck = await authMiddleware(req as any);

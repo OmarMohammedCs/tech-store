@@ -1,4 +1,3 @@
-import { connectDB } from "@/app/config/db";
 import GoogleProvider from "next-auth/providers/google";
 import Users from "@/app/models/users";
 import type { NextAuthOptions } from "next-auth";
@@ -11,11 +10,13 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
+  session: {
+    strategy: "jwt",
+  },
+
   callbacks: {
     async signIn({ user }) {
-      await connectDB();
-
-      let existingUser = await Users.findOne({ email: user.email });
+      const existingUser = await Users.findOne({ email: user.email });
 
       if (!existingUser) {
         await Users.create({
@@ -26,7 +27,7 @@ export const authOptions: NextAuthOptions = {
         });
       }
 
-      return true;
+      return !!user.email;
     },
 
     async jwt({ token, user }) {
@@ -40,23 +41,13 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      await connectDB();
-
-      const dbUser = await Users.findOne({ email: token.email });
-
-      if (dbUser) {
-        session.user.id = dbUser._id.toString();
-        session.user.name = dbUser.name;
-        session.user.email = dbUser.email;
-        session.user.image = dbUser.avatar;
-      }
+      session.user.id = token.id as string;
+      session.user.name = token.name as string;
+      session.user.email = token.email as string;
+      session.user.image = token.picture as string;
 
       return session;
     },
-  },
-
-  session: {
-    strategy: "jwt",
   },
 
   pages: {

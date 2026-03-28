@@ -36,7 +36,7 @@ type Props = {
 };
 
 export default function Card({ product, onDelete }: Props) {
-  if (!product?.product) return null;
+
 
   const { product: prod } = product;
   const imageSrc = prod.images?.length ? prod.images[0] : "/placeholder.jpg";
