@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 
 import MainLayout from "@/app/mainLayout";
 import BreadcrumbsComponent from "@/components/breadcrumbs";
-import { useCart } from "@/app/context/CartContext";
 
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
@@ -30,6 +29,7 @@ import { Modal, ModalBody, ModalContent, useDisclosure } from "@heroui/modal";
 import { Textarea } from "@heroui/input";
 import Loading from "@/components/loading";
 import { api } from "@/app/servise/api";
+import { useCart } from "@/app/store/CartStore";
 
 interface Review {
   _id: string;
@@ -54,7 +54,8 @@ type ProductType = {
 };
 
 export default function ProductDetails() {
-  const { addItem, cart } = useCart();
+const cart = useCart((state) => state.cart);
+const addItem = useCart((state) => state.addItem);
   const [count, setCount] = useState(1);
   const [selectImg, setSelectImg] = useState(0);
   const [selectShowImg, setSelectShowImg] = useState(0);
@@ -192,32 +193,44 @@ export default function ProductDetails() {
       ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1)
       : "0.0";
 
-  const handleAddToCart = async () => {
-    const user = localStorage.getItem("user");
-    if (!user) {
-      toast.error("You must be logged in");
-      return;
-    }
-    if (!productData) return;
-    const productForCart = {
-      id: productData._id,
-      name: productData.name,
-      price: productData.price,
-      img: images[selectImg],
-      quantity: count,
-    };
-    if (count > productData.countInStock) {
-      toast.error("Not enough stock");
-      return;
-    }
-    await axios.put(`http://localhost:3000/api/products/edit/${productData._id}`, {
-      countInStock: productData.countInStock - count
-    });
-    const existing = cart.find((item: any) => item.id === productForCart.id);
-    if (existing) addItem({ ...productForCart, quantity: existing.quantity + count });
-    else addItem(productForCart);
-    toast.success(`${productData.name} added to cart`);
+const handleAddToCart = async () => {
+  const user = localStorage.getItem("user");
+  if (!user) {
+    toast.error("You must be logged in");
+    return;
+  }
+
+  if (!productData) return;
+
+  if (count > productData.countInStock) {
+    toast.error("Not enough stock");
+    return;
+  }
+
+  const productForCart = {
+    id: productData._id,
+    name: productData.name,
+    price: productData.price,
+    img: images[selectImg],
+    quantity: count,
   };
+
+  try {
+    await axios.put(
+      `http://localhost:3000/api/products/edit/${productData._id}`,
+      {
+        countInStock: productData.countInStock - count,
+      }
+    );
+
+    // 👇 Zustand handles merge logic internally
+    addItem(productForCart);
+
+    toast.success(`${productData.name} added to cart`);
+  } catch (error) {
+    toast.error("Failed to update stock");
+  }
+};
 
   return (
     <MainLayout>

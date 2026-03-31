@@ -5,7 +5,6 @@ import clsx from "clsx";
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
-import { CartProvider } from "./context/CartContext";
 
 
 export const metadata: Metadata = {
@@ -44,9 +43,7 @@ export default function RootLayout({
       
           <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
             <div className="relative flex flex-col h-screen">
-              <CartProvider>
                 {children}
-              </CartProvider>
 
             </div>
           </Providers>

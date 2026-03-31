@@ -79,6 +79,9 @@ export const api = {
   rating : {
     getAll : (productId: any) => authAPI.get(`/api/rating`,{params: { product: productId },}),
     create: (data: any) => authAPI.post("/api/rating", data),
+  },
+  search : {
+    search: (query: any) => authAPI.get("http://localhost:3000/api/products/search", { params: { query } }),
   }
 };
 

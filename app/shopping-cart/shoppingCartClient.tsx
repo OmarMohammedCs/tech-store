@@ -9,13 +9,15 @@ import Image from "next/image";
 import MainLayout from "../mainLayout";
 import BreadcrumbsComponent from "@/components/breadcrumbs";
 import { Button } from "@heroui/button";
-import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useCart } from "../store/CartStore";
 
 
 export default function ShoppingCartClient() {
-  const { cart, removeItem, updateQuantity } = useCart();
+const cart = useCart((state) => state.cart);
+const removeItem = useCart((state) => state.removeItem);
+const updateQuantity = useCart((state) => state.updateQuantity);
   const [animateId, setAnimateId] = useState<number | null>(null);
   const router = useRouter();
 
@@ -23,13 +25,16 @@ export default function ShoppingCartClient() {
     document.title = "TechStore - Shopping Cart";
   }, [])
 
-  useEffect(() => {
-    if (cart.length === 0) {
+useEffect(() => {
+  if (!cart.length) {
+    const t = setTimeout(() => {
       toast.error("Your cart is empty! Redirecting to products page...");
-        router.push("/products");
-      return;
-    }
-    }, [cart]);
+      router.push("/products");
+    }, 300);
+
+    return () => clearTimeout(t);
+  }
+}, [cart.length]);
 
 
   useEffect(() => {

@@ -79,26 +79,27 @@ export default function NavbarComponent() {
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (searchQuery.length === 0) {
+useEffect(() => {
+  if (!searchQuery.trim()) {
+    setSearchResultsData([]);
+    return;
+  }
+
+  const fetchSearchResults = async () => {
+    try {
+      const res = await api.search.search(searchQuery);
+
+      setSearchResultsData(res.data?.products || res.data || []);
+    } catch (error) {
+      console.error("Search error:", error);
       setSearchResultsData([]);
-      return;
     }
+  };
 
-    const fetchSearchResults = async () => {
-      try {
-        const res = await axios.get("http://localhost:3000/api/products/search", {
-          params: { query: searchQuery },
-        });
-        setSearchResultsData(res.data || []);
-      } catch (error) {
-        console.error("Error fetching search results:", error);
-        setSearchResultsData([]);
-      }
-    };
+  const delay = setTimeout(fetchSearchResults, 300);
 
-    fetchSearchResults();
-  }, [searchQuery]);
+  return () => clearTimeout(delay);
+}, [searchQuery]);
 
 const fetchNotifications = async () => {
   const userLocal = JSON.parse(localStorage.getItem('user') || '{}');
